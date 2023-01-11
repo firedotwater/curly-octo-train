@@ -16,3 +16,5 @@ As mentioned, [here](docs/doc.md) will be the whole step-by-step documentation o
 
 ## Conclusion :low_brightness:
 This entire project was very interesting because I could resolve a real need, and it works properly. I can create x mail addresses for the dummy domain, send and receive mail, and it will store it on the EC2 instance. The main configuration of the postfix aka mailserver, was very intense. Beside the mailserver configuration, I used certbot to enroll and let's encrypt certificates for the nginx webserver. 
+
+[Here](testing/testing.md) I did some testing.
