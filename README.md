@@ -7,6 +7,7 @@ Hello folks! I'm Fabio, the one and only. In this repository I'll provide my pro
 
 ## Why did I this? :computer:
 The idea is to buy a dummy domain, host a t2.micro instance on AWS, and install and configure major packages [Here](packages.md) is a complete list of the packages. And be able to setup my own Unix mail server and login with a client to the mail account. I was looking anyway do to somithing like this for my own porposes. So I needed to write this ducomentation but now I'm force do to it beautiful.
+
 <img src='img/meme.jpg' alt="meme" width="350" height="350"></img>
 
 ## Progress of the project :bulb:
