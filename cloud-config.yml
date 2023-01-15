@@ -17,10 +17,15 @@ package_upgrade: true
 package_reboot_if_required: true
 
 runcmd:
+  - systemctl enable nginx
+  - systemctl start nginx
+  - systemctl enable postfix
+  - systemctl start postfix
   - touch /etc/nginx/conf.d/mail.boringtate.store.conf
-  - echo -e "server {\n      listen 80;\n      listen [::]:80;\n      server_name mail.boringtate.store;\n  \n      root /usr/share/nginx/html/;\n  \n      location ~ /.well-known/acme-challenge {\n         allow all;\n      }\n}" >> /etc/nginx/conf.d/mail.boringtate.store.conf
+  - echo "server {\n      listen 80;\n      listen [::]:80;\n      server_name mail.boringtate.store;\n  \n      root /usr/share/nginx/html/;\n  \n      location ~ /.well-known/acme-challenge {\n         allow all;\n      }\n}" >> /etc/nginx/conf.d/mail.boringtate.store.conf
   - mkdir -p /usr/share/nginx/html/
   - systemctl reload nginx
+  - sleep 6m
   - certbot certonly -a nginx --agree-tos --no-eff-email --staple-ocsp --email boringtate.aws01@gmx.ch -d mail.boringtate.store
   - sed -i '18i\submission     inet     n    -    y    -    -    smtpd\n  -o syslog_name=postfix/submission\n  -o smtpd_tls_security_level=encrypt\n  -o smtpd_tls_wrappermode=no\n  -o smtpd_sasl_auth_enable=yes\n  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject\n  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject\n  -o smtpd_sasl_type=dovecot\n  -o smtpd_sasl_path=private/auth' /etc/postfix/master.cf
   - sed -i '41i\smtps     inet  n       -       y       -       -       smtpd\n  -o syslog_name=postfix/smtps\n  -o smtpd_tls_wrappermode=yes\n  -o smtpd_sasl_auth_enable=yes\n  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject\n  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject\n  -o smtpd_sasl_type=dovecot\n  -o smtpd_sasl_path=private/auth' /etc/postfix/master.cf
