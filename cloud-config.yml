@@ -1,0 +1,58 @@
+#cloud-config
+fqdn: mail.boringtate.store
+hostname: myhost
+prefer_fqdn_over_hostname: true
+packages:
+  - php
+  - nginx
+  - postfix
+  - certbot
+  - python3-certbot-nginx
+  - dovecot-core 
+  - dovecot-imapd
+  - dovecot-lmtpd
+  - libsasl2-modules
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+runcmd:
+  - touch /etc/nginx/conf.d/mail.boringtate.store.conf
+  - echo -e "server {\n      listen 80;\n      listen [::]:80;\n      server_name mail.boringtate.store;\n  \n      root /usr/share/nginx/html/;\n  \n      location ~ /.well-known/acme-challenge {\n         allow all;\n      }\n}" >> /etc/nginx/conf.d/mail.boringtate.store.conf
+  - mkdir -p /usr/share/nginx/html/
+  - systemctl reload nginx
+  - certbot certonly -a nginx --agree-tos --no-eff-email --staple-ocsp --email boringtate.aws01@gmx.ch -d mail.boringtate.store
+  - sed -i '18i\submission     inet     n    -    y    -    -    smtpd\n  -o syslog_name=postfix/submission\n  -o smtpd_tls_security_level=encrypt\n  -o smtpd_tls_wrappermode=no\n  -o smtpd_sasl_auth_enable=yes\n  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject\n  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject\n  -o smtpd_sasl_type=dovecot\n  -o smtpd_sasl_path=private/auth' /etc/postfix/master.cf
+  - sed -i '41i\smtps     inet  n       -       y       -       -       smtpd\n  -o syslog_name=postfix/smtps\n  -o smtpd_tls_wrappermode=yes\n  -o smtpd_sasl_auth_enable=yes\n  -o smtpd_relay_restrictions=permit_sasl_authenticated,reject\n  -o smtpd_recipient_restrictions=permit_mynetworks,permit_sasl_authenticated,reject\n  -o smtpd_sasl_type=dovecot\n  -o smtpd_sasl_path=private/auth' /etc/postfix/master.cf
+  - sed -i '26,33d' /etc/postfix/main.cf
+  - sed -i '25i\#Enable TLS Encryption when Postfix receives incoming emails\nsmtpd_tls_cert_file=/etc/letsencrypt/live/mail.boringtate.store/fullchain.pem\nsmtpd_tls_key_file=/etc/letsencrypt/live/mail.boringtate.store/privkey.pem\nsmtpd_tls_security_level=may\nsmtpd_tls_loglevel = 1\nsmtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache\n  \n#Enable TLS Encryption when Postfix sends outgoing emails\nsmtp_tls_security_level = may\nsmtp_tls_loglevel = 1\nsmtp_tls_session_cache_database = btree:${data_directory}/smtp_scache\n  \n#Enforce TLSv1.3 or TLSv1.2\nsmtpd_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1\nsmtpd_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1\nsmtp_tls_mandatory_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1\nsmtp_tls_protocols = !SSLv2, !SSLv3, !TLSv1, !TLSv1.1' /etc/postfix/main.cf
+  - systemctl restart postfix
+  - sed -i '24i\protocols = imap lmtp' /etc/dovecot/dovecot.conf
+  - sed -i '30d' /etc/dovecot/conf.d/10-mail.conf
+  - sed -i '30i\mail_location = maildir:~/Maildir' /etc/dovecot/conf.d/10-mail.conf
+  - adduser dovecot mail
+  - sed -i '55d' /etc/dovecot/conf.d/10-master.conf
+  - sed -i '55i\ unix_listener /var/spool/postfix/private/dovecot-lmtp {\n   mode = 0600\n   user = postfix\n   group = postfix' /etc/dovecot/conf.d/10-master.conf
+  - sed -i '56i\mailbox_transport = lmtp:unix:private/dovecot-lmtp\nsmtputf8_enable = no' /etc/postfix/main.cf
+  - sed -i "/disable_plaintext_auth/s/^#//g" /etc/dovecot/conf.d/10-auth.conf
+  - sed -i '51d' /etc/dovecot/conf.d/10-auth.conf
+  - sed -i '51i\auth_username_format = %n' /etc/dovecot/conf.d/10-auth.conf
+  - sed -i 's/auth_mechanisms = plain/auth_mechanisms = plain login/g' /etc/dovecot/conf.d/10-auth.conf
+  - sed -i 's/ssl = yes/ssl = required/g' /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i '12,13d' /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i '12i\ssl_cert = </etc/letsencrypt/live/mail.boringtate.store/fullchain.pem' /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i '13i\ssl_key = </etc/letsencrypt/live/mail.your-domain.com/privkey.pem' /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i "/ssl_prefer_server_ciphers = no/s/^#//g" /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i 's/ssl_prefer_server_ciphers = no/ssl_prefer_server_ciphers = yes/g' /etc/dovecot/conf.d/10-ssl.conf
+  - sed -i '/providers = provider_sect/s/^/#/g' /etc/ssl/openssl.cnf
+  - sed -i '103d' /etc/dovecot/conf.d/10-master.conf
+  - sed -i '103i\    unix_listener /var/spool/postfix/private/auth {\n      mode = 0660\n      user = postfix\n      group = postfix' /etc/dovecot/conf.d/10-master.conf
+  - sed -i '52i\    auto = create' /etc/dovecot/conf.d/15-mailboxes.conf
+  - sed -i '56i\    auto = create' /etc/dovecot/conf.d/15-mailboxes.conf
+  - sed -i '59i\    auto = create' /etc/dovecot/conf.d/15-mailboxes.conf
+  - sed -i '65i\    auto = create' /etc/dovecot/conf.d/15-mailboxes.conf
+  - sed -i '68i\    auto = create' /etc/dovecot/conf.d/15-mailboxes.conf
+  - systemctl restart postfix dovecot
+  - adduser info
+  - doveadm user '*'
+  - systemctl restart dovecot
