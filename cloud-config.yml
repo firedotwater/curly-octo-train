@@ -61,3 +61,10 @@ runcmd:
   - adduser info
   - doveadm user '*'
   - systemctl restart dovecot
+  - sed -i 's/relayhost =/relayhost = [smtp-relay.sendinblue.com]:587/g' /etc/postfix/main.cf
+  - sed -i 'a smtp_sasl_auth_enable = yes\nsmtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd\nsmtp_sasl_security_options = noanonymous\nsmtp_tls_security_level = may\nheader_size_limit = 4096000' /etc/postfix/main.cf
+  - touch nano /etc/postfix/sasl_passwd
+  - sed -i 'a [smtp-relay.sendinblue.com]:587      smtp_username:smtp_password'
+  - postmap /etc/postfix/sasl_passwd
+  - systemctl restart postfix
+  - chmod 0600 /etc/postfix/sasl_passwd /etc/postfix/sasl_passwd.db
