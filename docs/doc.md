@@ -20,11 +20,11 @@ Now that we have a suitable domain and a valid email address for our project, th
 
 As usual, I created the standard EC2 t2.micro with Ubuntu 22.04, 25GB of space, and no special network group instance to see which packages I needed to install to get this working. After researching, I could find out the necessary software packages that needed to be installed and configured. 
 
-<img src='/img/ec2_name.png' alt="ec2_name" height="500px" width="500px"></img>
-<img src='/img/t2micro.png' alt="t2micro" height="500px" width="500px"></img>
-<img src='/img/network_group.png' alt="network" height="500px" width="500px"></img>
-<img src='/img/ports.png' alt="ports" height="500px" width="500px"></img>
-<img src='/img/cloud-config.png' alt="cloud-config" height="500px" width="500px"></img>
+<img src='/img/ec2_name.png' alt="ec2_name"></img>
+<img src='/img/t2micro.png' alt="t2micro" ></img>
+<img src='/img/network_group.png' alt="network" ></img>
+<img src='/img/ports.png' alt="ports" ></img>
+<img src='/img/cloud-config.png' alt="cloud-config" ></img>
 
 
 ### Could-config what the ..? :dizzy_face:
