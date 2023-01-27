@@ -20,7 +20,7 @@ Click [here](https://boringtate.store).
 
 <img src='/img/mail_setup.png' alt="ec2_name"></img>
 
-<img src='/img/konto_einbindungs.png' alt="ec2_name"></img>
+<img src='/img/konto_einbindung.png' alt="ec2_name"></img>
 
 >**Sending mail does also work**
 
