@@ -20,6 +20,8 @@ Now that we have a suitable domain and a valid email address for our project, th
 
 As usual, I created the standard EC2 t2.micro with Ubuntu 22.04, 25GB of space, and no special network group instance to see which packages I needed to install to get this working. After researching, I could find out the necessary software packages that needed to be installed and configured. 
 
+<img src='img/ec2_name.png' alt="ec2_name"></img>
+
 ### Could-config what the ..? :dizzy_face:
 
 Since I had touch points with YAML and Ansible, I could really quickly understand what could-config is and how it works on AWS EC2 instances. This whole setup can help a lot if you have a clear and nice cloud-config file. The advantage of it is that you are freaking fast if you have to setup, for example, 20 nginx webservices at one time, and every one of them is built like the other, so there aren't any more human mistakes.
