@@ -19,3 +19,11 @@ Click [here](https://boringtate.store).
 >**YES IT DOES**
 
 <img src='/img/mail_setup.png' alt="ec2_name"></img>
+
+<img src='/img/konto_einbindungs.png' alt="ec2_name"></img>
+
+>**Sending mail does also work**
+
+<img src='/img/send_mail.png' alt="ec2_name"></img>
+
+<img src='/img/mail_ergebnis.png' alt="ec2_name"></img>
