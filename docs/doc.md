@@ -20,7 +20,7 @@ Now that we have a suitable domain and a valid email address for our project, th
 
 As usual, I created the standard EC2 t2.micro with Ubuntu 22.04, 25GB of space, and no special network group instance to see which packages I needed to install to get this working. After researching, I could find out the necessary software packages that needed to be installed and configured. 
 
-<img src='img/ec2_name.png' alt="ec2_name"></img>
+<img src='/img/ec2_name.png' alt="ec2_name"></img>
 
 ### Could-config what the ..? :dizzy_face:
 
