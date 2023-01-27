@@ -6,7 +6,7 @@ In this section, I will try to explain every step I took to achieve the main goa
 
 The first thing I did was search for and find a valid good-and-nonsense domain for this project. After a few research tactics and recent stories about Andrew Tate and his entire scandal story, I decided to come up with:
 
->**BORINGTATE.STORE**
+>**[BORINGTATE.STORE](https://boringtate.store)**
 
 
 After buying the domain for 1.20 CHF from [GoDaddy](https://www.godaddy.com/de-ch) I also created a nonsense email address to later open a brand new AWS account. The chosen email provider was, amazingly, not Google it was GMX. After creating the email address, I needed a name for the suitable domain, which I decided to come up with.
@@ -27,3 +27,8 @@ Since I had touch points with YAML and Ansible, I could really quickly understan
 ### The second instance but with cloud-config :poop:
 
 I tried to setup the could-config file according to the requirements that he needs regarding the syntax. I could already configure the instance's fqdn and which software packages he needed to install, but there was a longer list of different unix commands that needed to be run before everything worked as expected. As you can imagine, at first I had a lot of issues because there was sometimes a syntax error because I overtyped it or because I didn't setup enough sleep time for the system to cool off after specified commands. 
+
+
+### The last run :runner:
+
+After tweaking and configuring the software packages as I wanted to, I could create a cloud-config with the perfect changes. The only manual interaction was at the first sleep time for the system that I needed to change on [GoDaddy](https://www.godaddy.com/de-ch) the necessary DSN changes with the public IP from the instance. This needs to be done to create the Let's Encrypt certificate for the domain. Only with the certificate does the postfix software package function properly.
