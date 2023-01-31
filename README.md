@@ -1,4 +1,4 @@
-# DevOps CloudNativ Mini Projekt Documentation
+# Cloud-native, DevOps & Container| Project Documentation
 
 <img src='img/banner.png' alt="banner"></img>
 
