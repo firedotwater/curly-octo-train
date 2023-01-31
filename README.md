@@ -2,7 +2,7 @@
 
 <img src='img/banner.png' alt="banner"></img>
 
-## About the mini project :writing_hand:
+## About the project :writing_hand:
 
 Hello folks! I'm Fabio, the one and only. In this repository I'll provide my project and explain what it does and how I went by step by step.
 
